@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 
 namespace Fusion100Example
 {
-    public class NetworkManager : MonoBehaviour
+    public class ExampleNetworkManager : MonoBehaviour
     {
         public static NetworkRunner Runner;
 

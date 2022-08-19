@@ -4,10 +4,10 @@ using redd096.GameTopDown2D;
 
 namespace Fusion100Example
 {
-    public class Player : NetworkBehaviour
+    public class ExamplePlayer : NetworkBehaviour
     {
-        [SerializeField] private Ball prefabBall;
-        [SerializeField] private PhysxBall prefabPhysxBall;
+        [SerializeField] private ExampleBall prefabBall;
+        [SerializeField] private ExamplePhysxBall prefabPhysxBall;
 
         [Networked] private TickTimer delay { get; set; }
 
@@ -31,7 +31,7 @@ namespace Fusion100Example
         public NetworkBool spawned { get; set; }
 
         //function must be static, and pass a Changed variable. Can call LoadOld to see old values with var.Behaviour, or call LoadNew to re-show new values
-        public static void OnBallSpawned(Changed<Player> changed)
+        public static void OnBallSpawned(Changed<ExamplePlayer> changed)
         {
             changed.Behaviour.sprite.color = Color.white;
             //changed.LoadOld();
@@ -121,7 +121,7 @@ namespace Fusion100Example
         public override void FixedUpdateNetwork()
         {
             //get inputs
-            if (GetInput(out NetworkInputData data))
+            if (GetInput(out ExampleNetworkInputData data))
             {
                 //use direction to move (direction is normalized to prevent cheating. And speed is in movement component, so use the one on the network)
                 data.direction.Normalize();
@@ -131,7 +131,7 @@ namespace Fusion100Example
                 if (delay.ExpiredOrNotRunning(Runner))
                 {
                     //if pressed button 0, spawn ball rotated in direction
-                    if ((data.buttons & NetworkInputData.MOUSEBUTTON0) != 0)
+                    if ((data.buttons & ExampleNetworkInputData.MOUSEBUTTON0) != 0)
                     {
                         //set delay
                         delay = TickTimer.CreateFromSeconds(Runner, 0.5f);
@@ -143,13 +143,13 @@ namespace Fusion100Example
                         Runner.Spawn(prefabBall,
                         (Vector2)transform.position + direction, rotation,
                         Object.InputAuthority,                              //use Object.InputAuthority to get player ref
-                        (runner, o) => { o.GetComponent<Ball>().Init(); }); //initialize the ball before sync it
+                        (runner, o) => { o.GetComponent<ExampleBall>().Init(); }); //initialize the ball before sync it
 
                         //used for OnValueChanged example
                         spawned = !spawned;
                     }
                     //else if pressed button 1, spawn physx ball rotated in direction
-                    if ((data.buttons & NetworkInputData.MOUSEBUTTON1) != 0)
+                    if ((data.buttons & ExampleNetworkInputData.MOUSEBUTTON1) != 0)
                     {
                         //set delay
                         delay = TickTimer.CreateFromSeconds(Runner, 0.5f);
@@ -161,7 +161,7 @@ namespace Fusion100Example
                         Runner.Spawn(prefabPhysxBall,
                         (Vector2)transform.position + direction, rotation,
                         Object.InputAuthority,                                                  //use Object.InputAuthority to get player ref
-                        (runner, o) => { o.GetComponent<PhysxBall>().Init(10 * direction); });  //initialize the ball before sync it, passing push force
+                        (runner, o) => { o.GetComponent<ExamplePhysxBall>().Init(10 * direction); });  //initialize the ball before sync it, passing push force
 
                         //used for OnValueChanged example
                         spawned = !spawned;

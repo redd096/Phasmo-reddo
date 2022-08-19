@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Fusion100Example
 {
-    public class NetworkRunnerCaller : MonoBehaviour, INetworkRunnerCallbacks
+    public class ExampleNetworkRunnerCaller : MonoBehaviour, INetworkRunnerCallbacks
     {
         [SerializeField] private NetworkPrefabRef playerPrefab = default;
 
@@ -48,7 +48,7 @@ namespace Fusion100Example
         public void OnInput(NetworkRunner runner, NetworkInput input)
         {
             //client collect inputs
-            NetworkInputData data = new NetworkInputData();
+            ExampleNetworkInputData data = new ExampleNetworkInputData();
 
             if (Input.GetKey(KeyCode.W))
                 data.direction += Vector2.up;
@@ -64,11 +64,11 @@ namespace Fusion100Example
 
             //checks for the primary mouse button and set the first bit of the buttons field if it is down. Be sure to reset variable
             if (mouseButton0)
-                data.buttons |= NetworkInputData.MOUSEBUTTON0;
+                data.buttons |= ExampleNetworkInputData.MOUSEBUTTON0;
             mouseButton0 = false;
 
             if (mouseButton1)
-                data.buttons |= NetworkInputData.MOUSEBUTTON1;
+                data.buttons |= ExampleNetworkInputData.MOUSEBUTTON1;
             mouseButton1 = false;
 
             //set input to network

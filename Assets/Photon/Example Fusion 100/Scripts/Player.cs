@@ -47,7 +47,67 @@ namespace Fusion100Example
 
         #endregion
 
+        #region RPC
 
+        private void Update()
+        {
+            //this is called on every client, so check this has input authority
+            if (Object.HasInputAuthority && Input.GetKeyDown(KeyCode.R))
+            {
+                RPC_SendMessage("Hey Mate!");
+            }
+        }
+
+        private UnityEngine.UI.Text textInScene;
+
+        //rpc called only from who has Input Authority, to everybody
+        //InputAuthority is client, StateAuthority is Server, Proxies every other client not self, All everybody
+        [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
+        public void RPC_SendMessage(string message, RpcInfo info = default) //can set RPCInfo = default to get info
+        {
+            //get text UI
+            if (textInScene == null)
+                textInScene = FindObjectOfType<UnityEngine.UI.Text>();
+
+            if (info.IsInvokeLocal)
+                message = $"You said: {message}\n";
+            else
+                message = $"Some other player said: {message}\n";
+            textInScene.text += message;
+        }
+
+        //static rpc ignore source and targets. Can be called from every client to every client. Can call on one specific client, see Targeted RPC
+        //It must have NetworkRunner has first parameter
+        [Rpc]
+        public static void Rpc_MyStaticRpc(NetworkRunner runner, int a) { }
+
+        //can set other optional variables:
+        //InvokeLocal (default true): True indicates that the RPC will be invoked on the local client too
+        //InvokeResim (default false): True indicates that the RPC will be invoked during re-simulations
+        //TickAligned (default true): Set to false if you do not want the receiving end to delay execution of the RPC until at or after the tick in which in was sent
+        //Channel (default Reliable): Set to Unreliable if the RPC can be lost in transmission
+        //HostMode (default SourceIsServer): Used when set RPCInfo in parameters. When you read info.Source (player ref) if is server return None.
+        //To include the Host's local PlayerRef instead, the HostMode attribute has to be set to RpcHostMode.SourceIsHostPlayer
+        [Rpc(RpcSources.All, RpcTargets.All, InvokeLocal = true, InvokeResim = true, TickAligned = false, Channel = RpcChannel.Unreliable, HostMode = RpcHostMode.SourceIsHostPlayer)]
+        void RpcStartBoost(RpcInfo info = default)
+        {
+            //info.Tick: at which tick was it sent.
+            //info.Source: which player (PlayerRef) sent it. (server is None. In host mode, can set RpcHostMode.SourceIsHostPlayer to receive local host player ref)
+            //info.Channel: was it sent as an Unreliable or Reliable RPC.
+            //info.IsInvokeLocal: if it is the local player who originally invoked this RPC.
+        }
+
+
+        //can send RPC to a specific client only. To do this, set a PlayerRef parameter with [RpcTarget] attribute
+        //Passing PlayerRef.None for the [RpcTarget] parameter will target the server!
+        [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
+        public void Rpc_TargetedInstanceMessage([RpcTarget] PlayerRef player, string message) { }
+
+        //can do this on static RPC too
+        [Rpc(sources: RpcSources.InputAuthority, targets: RpcTargets.All)]
+        public static void Rpc_MyTargetedStaticMessage(NetworkRunner runner, [RpcTarget] PlayerRef player, string message) { }
+
+        #endregion
 
         private void Awake()
         {

@@ -12,11 +12,13 @@ namespace Fusion100Example
 
         private Dictionary<PlayerRef, NetworkObject> spawnedCharacters = new Dictionary<PlayerRef, NetworkObject>();
         private bool mouseButton0;
+        private bool mouseButton1;
 
         private void Update()
         {
             //To ensure that quick taps are not missed, the mouse button is sampled in Update() and reset once it has been recorded in the input structure in OnInput()
-            mouseButton0 = mouseButton0 | Input.GetMouseButton(0);
+            mouseButton0 = mouseButton0 || Input.GetMouseButton(0);
+            mouseButton1 = mouseButton1 || Input.GetMouseButton(1);
         }
 
         public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
@@ -62,8 +64,12 @@ namespace Fusion100Example
 
             //checks for the primary mouse button and set the first bit of the buttons field if it is down. Be sure to reset variable
             if (mouseButton0)
-                data.buttons |= NetworkInputData.MOUSEBUTTON1;
+                data.buttons |= NetworkInputData.MOUSEBUTTON0;
             mouseButton0 = false;
+
+            if (mouseButton1)
+                data.buttons |= NetworkInputData.MOUSEBUTTON1;
+            mouseButton1 = false;
 
             //set input to network
             input.Set(data);

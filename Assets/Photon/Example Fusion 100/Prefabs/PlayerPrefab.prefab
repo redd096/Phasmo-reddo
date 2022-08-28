@@ -58,7 +58,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5432279322884744486}
   - component: {fileID: 5432279322884744481}
-  - component: {fileID: 3255782336133484310}
+  - component: {fileID: -4669322067720755782}
   - component: {fileID: 5432279322884744480}
   - component: {fileID: -7083688226626568641}
   - component: {fileID: -138128115839627162}
@@ -109,10 +109,10 @@ MonoBehaviour:
     RawGuidValue: 83b6c26cbe3bee54982d071a78eddb41
   NestedObjects: []
   NetworkedBehaviours:
-  - {fileID: 3255782336133484310}
+  - {fileID: -4669322067720755782}
   - {fileID: -7083688226626568641}
   SimulationBehaviours: []
---- !u!114 &3255782336133484310
+--- !u!114 &-4669322067720755782
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -121,7 +121,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5432279322884744482}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Script: {fileID: -1779252708, guid: e725a070cec140c4caffb81624c8c787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 2
